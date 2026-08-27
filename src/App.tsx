@@ -2,11 +2,19 @@ import { useState } from 'react'
 import clsx from 'clsx'
 import { PracticePage } from './pages/PracticePage'
 import { ProgressPage } from './pages/ProgressPage'
+import { AuthorPage } from './pages/AuthorPage'
+import { useProgressStore } from './store/useProgressStore'
 
-type View = 'practice' | 'progress'
+type View = 'practice' | 'progress' | 'author'
 
 function App() {
   const [view, setView] = useState<View>('practice')
+  const practiceNext = useProgressStore((s) => s.practiceNext)
+
+  function handlePracticeCase(caseId: string) {
+    practiceNext(caseId)
+    setView('practice')
+  }
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -26,11 +34,18 @@ function App() {
             <NavButton active={view === 'progress'} onClick={() => setView('progress')}>
               Progress
             </NavButton>
+            <NavButton active={view === 'author'} onClick={() => setView('author')}>
+              Author
+            </NavButton>
           </nav>
         </div>
       </header>
 
-      <main>{view === 'practice' ? <PracticePage /> : <ProgressPage />}</main>
+      <main>
+        {view === 'practice' && <PracticePage />}
+        {view === 'progress' && <ProgressPage />}
+        {view === 'author' && <AuthorPage onPracticeCase={handlePracticeCase} />}
+      </main>
     </div>
   )
 }

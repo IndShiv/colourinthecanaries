@@ -2,7 +2,9 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { getCaseById } from '../data/cases'
 import { useProgressStore } from '../store/useProgressStore'
 import { computeMetrics, scoreCase } from '../lib/scoring'
+import { getCaseViewSize } from '../lib/layout'
 import { BitewingImage } from '../components/BitewingImage'
+import { UploadedCaseImage } from '../components/UploadedCaseImage'
 import { PaintCanvas, type PaintCanvasHandle, type BrushTool } from '../components/PaintCanvas'
 import { ColorToolbar, PALETTE } from '../components/ColorToolbar'
 import { FeedbackOverlay, FeedbackLegend } from '../components/FeedbackOverlay'
@@ -19,6 +21,7 @@ export function PracticePage() {
   const caseId = caseQueue[queueIndex] ?? caseQueue[0]
   const caseData = useMemo(() => getCaseById(caseId), [caseId])
   const metrics = useMemo(() => computeMetrics(attempts), [attempts])
+  const { w: viewW, h: viewH } = useMemo(() => getCaseViewSize(caseData?.image), [caseData])
 
   const canvasRef = useRef<PaintCanvasHandle>(null)
   const startTimeRef = useRef(Date.now())
@@ -36,6 +39,11 @@ export function PracticePage() {
     setResults(null)
     canvasRef.current?.clear()
   }, [caseId])
+
+  useEffect(() => {
+    // A queued case can vanish if a teacher deletes it mid-session — skip past it.
+    if (!caseData) goToNextCase()
+  }, [caseData, goToNextCase])
 
   if (!caseData) return null
 
@@ -75,10 +83,20 @@ export function PracticePage() {
           </div>
         </div>
 
-        <div className="relative w-full overflow-hidden rounded-lg bg-black" style={{ aspectRatio: '800 / 420' }}>
-          <BitewingImage caseData={caseData} />
-          <PaintCanvas ref={canvasRef} color={color} brushSize={brushSize} tool={tool} disabled={submitted} />
-          {submitted && results && <FeedbackOverlay caseData={caseData} results={results} />}
+        <div className="relative w-full overflow-hidden rounded-lg bg-black" style={{ aspectRatio: `${viewW} / ${viewH}` }}>
+          {caseData.image ? <UploadedCaseImage image={caseData.image} /> : <BitewingImage caseData={caseData} />}
+          <PaintCanvas
+            ref={canvasRef}
+            color={color}
+            brushSize={brushSize}
+            tool={tool}
+            disabled={submitted}
+            viewW={viewW}
+            viewH={viewH}
+          />
+          {submitted && results && (
+            <FeedbackOverlay caseData={caseData} results={results} viewW={viewW} viewH={viewH} />
+          )}
         </div>
 
         <p className="mt-2 text-xs text-slate-500">

@@ -1,6 +1,7 @@
 import type { Arch, Case, LesionSize, Surface, Tooth } from '../types'
 import { getSurfaceZone } from '../lib/layout'
 import { mulberry32 } from '../lib/prng'
+import { useCaseStore } from '../store/useCaseStore'
 
 const CHIEF_COMPLAINTS = [
   'Routine recall exam, no complaints.',
@@ -85,5 +86,10 @@ export const CASE_BANK: Case[] = LESION_BUDGETS.map((budget, i) =>
 )
 
 export function getCaseById(id: string): Case | undefined {
-  return CASE_BANK.find((c) => c.id === id)
+  return CASE_BANK.find((c) => c.id === id) ?? useCaseStore.getState().customCases.find((c) => c.id === id)
+}
+
+/** All practice-able case ids: the built-in schematic bank plus any teacher-authored cases. */
+export function listAllCaseIds(): string[] {
+  return [...CASE_BANK.map((c) => c.id), ...useCaseStore.getState().customCases.map((c) => c.id)]
 }

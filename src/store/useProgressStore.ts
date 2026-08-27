@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type { Attempt, SurfaceResult } from '../types'
-import { CASE_BANK } from '../data/cases'
+import { listAllCaseIds } from '../data/cases'
 
 // Persisted via localStorage for now. The shape here is intentionally
 // storage-agnostic (plain attempts + a case queue) so a later move to a
@@ -30,10 +30,12 @@ interface ProgressState {
   }) => void
   goToNextCase: () => void
   resetProgress: () => void
+  /** Inserts a case right after the current one — used by "try it now" after authoring a case. */
+  practiceNext: (caseId: string) => void
 }
 
 function freshQueue(): string[] {
-  return shuffled(CASE_BANK.map((c) => c.id))
+  return shuffled(listAllCaseIds())
 }
 
 export const useProgressStore = create<ProgressState>()(
@@ -68,6 +70,14 @@ export const useProgressStore = create<ProgressState>()(
 
       resetProgress: () => {
         set({ attempts: [], caseQueue: freshQueue(), queueIndex: 0 })
+      },
+
+      practiceNext: (caseId) => {
+        const { queueIndex, caseQueue } = get()
+        const insertAt = queueIndex + 1
+        const queue = [...caseQueue]
+        queue.splice(insertAt, 0, caseId)
+        set({ caseQueue: queue, queueIndex: insertAt })
       },
     }),
     {

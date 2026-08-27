@@ -1,9 +1,10 @@
 import type { Case, SurfaceResult } from '../types'
-import { VIEW_W, VIEW_H } from '../lib/layout'
 
 interface Props {
   caseData: Case
   results: SurfaceResult[]
+  viewW: number
+  viewH: number
 }
 
 const STYLES = {
@@ -19,10 +20,10 @@ function classify(r: SurfaceResult): keyof typeof STYLES | null {
   return null
 }
 
-export function FeedbackOverlay({ caseData, results }: Props) {
+export function FeedbackOverlay({ caseData, results, viewW, viewH }: Props) {
   return (
     <svg
-      viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
+      viewBox={`0 0 ${viewW} ${viewH}`}
       className="pointer-events-none absolute inset-0 h-full w-full"
       aria-hidden="true"
     >
@@ -32,10 +33,10 @@ export function FeedbackOverlay({ caseData, results }: Props) {
         const surface = caseData.surfaces.find((s) => s.id === r.surfaceId)
         if (!surface) return null
         const style = STYLES[kind]
-        const cx = (surface.zone.x + surface.zone.w / 2) * VIEW_W
-        const cy = (surface.zone.y + surface.zone.h / 2) * VIEW_H
-        const rx = (surface.zone.w / 2) * VIEW_W * 1.15
-        const ry = (surface.zone.h / 2) * VIEW_H * 1.25
+        const cx = (surface.zone.x + surface.zone.w / 2) * viewW
+        const cy = (surface.zone.y + surface.zone.h / 2) * viewH
+        const rx = (surface.zone.w / 2) * viewW * 1.15
+        const ry = (surface.zone.h / 2) * viewH * 1.25
 
         return (
           <g key={r.surfaceId}>
@@ -47,6 +48,7 @@ export function FeedbackOverlay({ caseData, results }: Props) {
               fill={style.fill}
               stroke={style.stroke}
               strokeWidth={2.5}
+              vectorEffect="non-scaling-stroke"
               strokeDasharray={kind === 'missed' ? '5 4' : undefined}
             />
           </g>
