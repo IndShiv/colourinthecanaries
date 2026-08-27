@@ -5,10 +5,13 @@ import { putImage, readImageDimensions } from '../lib/imageStore'
 import { useCaseStore } from '../store/useCaseStore'
 import { useObjectUrl } from '../hooks/useObjectUrl'
 import { AnnotationCanvas } from '../components/AnnotationCanvas'
+import { DatasetUploader } from '../components/DatasetUploader'
 
 interface Props {
   onPracticeCase: (caseId: string) => void
 }
+
+type Mode = 'single' | 'bulk'
 
 function newSurface(zone: NormalizedRect, index: number): Surface {
   return {
@@ -34,6 +37,7 @@ export function AuthorPage({ onPracticeCase }: Props) {
   const [surfaces, setSurfaces] = useState<Surface[]>([])
   const [saving, setSaving] = useState(false)
   const [savedCaseId, setSavedCaseId] = useState<string | null>(null)
+  const [mode, setMode] = useState<Mode>('single')
 
   useEffect(() => {
     return () => {
@@ -97,7 +101,34 @@ export function AuthorPage({ onPracticeCase }: Props) {
   return (
     <div className="mx-auto flex max-w-4xl flex-col gap-4 px-4 py-6">
       <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
-        <h2 className="mb-1 text-sm font-semibold text-slate-700">Add a case</h2>
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className="text-sm font-semibold text-slate-700">Add cases</h2>
+          <div className="flex gap-1 rounded-lg bg-slate-100 p-1 text-xs">
+            <button
+              type="button"
+              onClick={() => setMode('single')}
+              className={`rounded-md px-2.5 py-1 font-medium transition ${
+                mode === 'single' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+              }`}
+            >
+              One case
+            </button>
+            <button
+              type="button"
+              onClick={() => setMode('bulk')}
+              className={`rounded-md px-2.5 py-1 font-medium transition ${
+                mode === 'bulk' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'
+              }`}
+            >
+              Bulk import
+            </button>
+          </div>
+        </div>
+
+        {mode === 'bulk' ? (
+          <DatasetUploader />
+        ) : (
+          <>
         <p className="mb-3 text-xs text-slate-500">
           Upload a bitewing image, then drag on it to mark each interproximal contact you want scored — mark
           whether it shows caries (red) or is clear (blue). Click a zone to remove it. Students will colour these
@@ -221,6 +252,8 @@ export function AuthorPage({ onPracticeCase }: Props) {
               Try it now →
             </button>
           </div>
+        )}
+          </>
         )}
       </div>
 

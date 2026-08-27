@@ -26,7 +26,13 @@ checkboxes, students **colour in** the suspect areas with a paint tool.
 - **Author** — for instructors: upload a real bitewing image, drag on it
   to mark each interproximal contact you want scored (caries or clear,
   and lesion size), then save. The case is added to the practice deck
-  immediately, mixed in with the built-in set.
+  immediately, mixed in with the built-in set. A **bulk import** mode
+  takes a JSON manifest (one entry per image, each listing its bounding
+  boxes — normalized 0-1 or pixel coordinates, auto-detected) plus the
+  matching image files, and imports them all at once — for pre-labelled
+  datasets rather than annotating one image at a time. See
+  `src/lib/datasetManifest.ts` for the format, or use the in-app "Download
+  an example manifest" link.
 
 Progress and authored cases are stored in the browser (`localStorage` for
 metadata/progress, IndexedDB for uploaded image bytes) — no account or
