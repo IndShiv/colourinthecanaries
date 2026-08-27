@@ -35,12 +35,21 @@ export interface Surface {
   zone: NormalizedRect
 }
 
+export interface CaseImageRef {
+  assetId: string
+  width: number
+  height: number
+}
+
 export interface Case {
   id: string
   patientAge: number
   chiefComplaint: string
+  /** Empty for image-backed cases — the schematic renderer isn't used for those. */
   teeth: Tooth[]
   surfaces: Surface[]
+  /** Present for teacher-uploaded cases; renders the real photo instead of the schematic SVG. */
+  image?: CaseImageRef
 }
 
 export interface SurfaceResult {

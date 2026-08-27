@@ -23,24 +23,30 @@ checkboxes, students **colour in** the suspect areas with a paint tool.
 - **Progress** — running accuracy/sensitivity/specificity, a competency
   badge (75% on all three, after at least 10 cases, mirroring the source
   study's standard), a learning-curve chart, and full case history.
+- **Author** — for instructors: upload a real bitewing image, drag on it
+  to mark each interproximal contact you want scored (caries or clear,
+  and lesion size), then save. The case is added to the practice deck
+  immediately, mixed in with the built-in set.
 
-Progress is stored in the browser (`localStorage`) — no account needed.
+Progress and authored cases are stored in the browser (`localStorage` for
+metadata/progress, IndexedDB for uploaded image bytes) — no account or
+backend needed.
 
 ## Case images
 
-The current case bank (`src/data/cases.ts`) is **procedurally generated,
-illustrative schematic diagrams** — not real clinical radiographs. Each
-case is fully data-driven (teeth, interproximal contact zones, and ground
-truth are plain objects), so a real de-identified/licensed bitewing image
-set with an answer key can be substituted later without touching the
-practice UI or scoring logic.
+The built-in case bank (`src/data/cases.ts`) is **procedurally generated,
+illustrative schematic diagrams** — not real clinical radiographs. Cases
+are fully data-driven (an optional image reference + interproximal contact
+zones + ground truth, all plain objects), which is what makes the Author
+tool possible: it just writes more of the same shape of data, backed by a
+real uploaded photo instead of a generated SVG.
 
 ## Tech stack
 
 Client-side only for now: React + TypeScript + Vite, Tailwind CSS,
 Zustand (+ `persist` for localStorage), Recharts. State is accessed only
-through `src/store/useProgressStore.ts`, so moving persistence to a real
-backend later is a matter of swapping what's behind that hook.
+through the store hooks (`src/store/`), so moving persistence to a real
+backend later is a matter of swapping what's behind them.
 
 ## Development
 

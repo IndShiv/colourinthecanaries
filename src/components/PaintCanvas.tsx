@@ -1,5 +1,4 @@
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react'
-import { VIEW_W, VIEW_H } from '../lib/layout'
 
 export type BrushTool = 'brush' | 'eraser'
 
@@ -14,12 +13,14 @@ interface Props {
   brushSize: number
   tool: BrushTool
   disabled?: boolean
+  viewW: number
+  viewH: number
 }
 
 const RESOLUTION_SCALE = 2
 
 export const PaintCanvas = forwardRef<PaintCanvasHandle, Props>(function PaintCanvas(
-  { color, brushSize, tool, disabled },
+  { color, brushSize, tool, disabled, viewW, viewH },
   ref,
 ) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
@@ -101,8 +102,8 @@ export const PaintCanvas = forwardRef<PaintCanvasHandle, Props>(function PaintCa
   return (
     <canvas
       ref={canvasRef}
-      width={VIEW_W * RESOLUTION_SCALE}
-      height={VIEW_H * RESOLUTION_SCALE}
+      width={viewW * RESOLUTION_SCALE}
+      height={viewH * RESOLUTION_SCALE}
       className={`absolute inset-0 h-full w-full touch-none ${disabled ? 'cursor-default' : 'cursor-crosshair'}`}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}

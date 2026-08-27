@@ -8,6 +8,19 @@ import type { Arch, NormalizedRect } from '../types'
 export const VIEW_W = 800
 export const VIEW_H = 420
 
+const MAX_VIEW_DIMENSION = 1400
+
+/**
+ * The logical coordinate box a case renders/paints/scores in: the fixed
+ * schematic box for generated cases, or a capped version of the uploaded
+ * photo's own aspect ratio for teacher-authored cases.
+ */
+export function getCaseViewSize(image?: { width: number; height: number }): { w: number; h: number } {
+  if (!image) return { w: VIEW_W, h: VIEW_H }
+  const scale = Math.min(1, MAX_VIEW_DIMENSION / Math.max(image.width, image.height))
+  return { w: Math.round(image.width * scale), h: Math.round(image.height * scale) }
+}
+
 const ARCH_MARGIN_X = 0.07
 const TOOTH_GAP_RATIO = 0.14
 const MIDLINE = 0.5
