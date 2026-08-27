@@ -1,4 +1,4 @@
-// Core domain types for Colouring the Canaries.
+// Core domain types for Colour the Caries.
 // Cases are data-driven so the illustrative SVG case bank in src/data/cases.ts
 // can later be swapped for a fetch() against a real backend / real BWR images
 // without touching the practice UI, scoring, or progress-tracking code.
