@@ -71,7 +71,7 @@ export const useProgressStore = create<ProgressState>()(
       },
     }),
     {
-      name: 'colouring-the-canaries-progress',
+      name: 'colour-the-caries-progress',
       partialize: (s) => ({ attempts: s.attempts, caseQueue: s.caseQueue, queueIndex: s.queueIndex }),
     },
   ),

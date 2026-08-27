@@ -1,4 +1,4 @@
-# Colouring the Canaries 🐤
+# Colour the Caries 🦷
 
 A browser-based practice tool for dental students learning to spot
 **pediatric interproximal caries** on bitewing radiographs — inspired by the

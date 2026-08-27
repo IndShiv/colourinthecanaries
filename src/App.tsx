@@ -13,9 +13,9 @@ function App() {
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-3">
           <div className="flex items-center gap-2">
-            <span className="text-xl">🐤</span>
+            <span className="text-xl">🦷</span>
             <div>
-              <h1 className="text-base font-bold text-slate-800">Colouring the Canaries</h1>
+              <h1 className="text-base font-bold text-slate-800">Colour the Caries</h1>
               <p className="text-xs text-slate-400">Interproximal caries diagnosis practice for dental students</p>
             </div>
           </div>
